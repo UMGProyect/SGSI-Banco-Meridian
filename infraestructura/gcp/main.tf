@@ -36,6 +36,11 @@ resource "google_compute_subnetwork" "segments" {
   region                   = var.region
   network                  = google_compute_network.meridian.id
   private_ip_google_access = true
+  log_config {
+    aggregation_interval = "INTERVAL_5_MIN"
+    flow_sampling        = 0.5
+    metadata             = "EXCLUDE_ALL_METADATA"
+  }
 }
 resource "google_compute_firewall" "iap_ssh" {
   name          = "meridian-iap-ssh"
@@ -73,7 +78,7 @@ resource "google_compute_router_nat" "outbound" {
   }
 }
 resource "google_compute_instance" "nodes" {
-  for_each     = var.enable_vms ? local.nodes : {}
+  for_each     = var.enable_vms ? { for k, v in local.nodes : k => v if contains(var.enabled_nodes, k) } : {}
   name         = "meridian-${each.key}"
   machine_type = each.value.machine
   zone         = var.zone
