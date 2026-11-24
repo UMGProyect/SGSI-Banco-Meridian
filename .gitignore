@@ -1,18 +1,52 @@
-# Secretos y archivos locales
+# Credenciales locales y llaves
 .env
 .env.*
 !.env.example
 *.pem
 *.key
 *.pfx
+*.p12
+*.jks
+id_rsa
+id_ed25519
+credentials.json
+application_default_credentials.json
+service-account*.json
+gha-creds-*.json
+secrets/
+.ssh/
+.config/gcloud/
+
+# Terraform: conservar el lockfile de dependencias
+.terraform/
 *.tfstate
 *.tfstate.*
-.terraform/
+*.tfplan
+*.tfplan.*
 *.tfvars
+*.tfvars.json
 !*.example.tfvars
+!*.example.tfvars.json
+!terraform.tfvars.example
+crash.log
+crash.*.log
+
+# Datos, respaldos y evidencia sin depurar
+*.sqlite
+*.sqlite3
+*.db
+*.dump
+*.bak
+*.log
+*.pcap
+*.pcapng
+evidencias/raw/
+evidencias/privadas/
+backups/
+*.retry
+
+# Entorno local
 __pycache__/
 .venv/
 node_modules/
-*.sqlite
-*.sqlite3
 ~$*
