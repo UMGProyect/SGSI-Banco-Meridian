@@ -1,0 +1,3 @@
+# Inventario parcial: version upstream observada en Ubuntu GCP el 24/11/2026.
+# No instalar con este archivo. No representa backports Ubuntu ni dependencias transitivas.
+cryptography==41.0.7
