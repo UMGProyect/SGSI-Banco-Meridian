@@ -45,18 +45,28 @@ jobs:
           sys.exit(int(sys.argv[2]))
           PY
   sca:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - ambiente: gcp-upstream
+            inventario: requirements-gcp-observado.txt
+          - ambiente: windows-local
+            inventario: requirements-windows-observado.txt
+    name: sca (${{ matrix.ambiente }})
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           persist-credentials: false
-      - name: OSV Scanner - inventario upstream observado
+      - name: OSV Scanner - inventario por ambiente
         shell: bash
         env:
+          INVENTARIO: ${{ matrix.inventario }}
           SCANNER: ghcr.io/google/osv-scanner:v2.7.1@sha256:a70ffffc2bfd33482953e5d6b64c6fcdb30239717a07b0f0d3ab2859ce3e4cde
         run: |
           set -euo pipefail
           docker pull "$SCANNER"
           docker run --rm "$SCANNER" --version
-          docker run --rm -v "$PWD/laboratorio:/src:ro" "$SCANNER" scan source --lockfile 'requirements.txt:/src/requirements-gcp-observado.txt'
+          docker run --rm -v "$PWD/laboratorio:/src:ro" "$SCANNER" scan source --lockfile "requirements.txt:/src/$INVENTARIO"
