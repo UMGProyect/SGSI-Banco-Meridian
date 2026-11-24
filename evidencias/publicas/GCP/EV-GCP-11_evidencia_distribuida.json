@@ -1,0 +1,280 @@
+{
+  "inicio_utc": "2026-11-24T19:05:54.016452+00:00",
+  "cierre_utc": "2026-11-24T19:06:02.980190+00:00",
+  "entorno_declarado": "GCP Compute Engine + equipo local mediante SSH/IAP",
+  "advertencia": "No verifica por sí mismo la ubicación GCP, MFA real, SIEM, HA, MDM/DLP ni BIA. Adjuntar evidencia externa de despliegue.",
+  "huella_original": "134bdfbcd2f9e78a07d14a112731fff500242b5dd0987f93cd261eed2b8bbc64",
+  "huella_variante": "ca6bda378a47561dce400a62da99304f88c050817e9dfa2982a75c19547a7b75",
+  "motor": "3.50.4",
+  "pruebas": [
+    {
+      "id": "LAB01",
+      "esperado": "Consulta autorizada web/móvil por HTTPS",
+      "observado": {
+        "web": 200,
+        "movil": 200,
+        "tls": "TLSv1.3",
+        "saldo_centavos": 100000
+      },
+      "resultado": "Aprobada"
+    },
+    {
+      "id": "LAB02",
+      "esperado": "Señal reforzada sintética requerida; sesión inválida rechazada",
+      "observado": {
+        "sin_refuerzo": 403,
+        "sin_sesion": 401
+      },
+      "resultado": "Aprobada"
+    },
+    {
+      "id": "LAB03",
+      "esperado": "Cuenta ajena y adaptador sin clave rechazados",
+      "observado": {
+        "consulta_ajena": 403,
+        "orden_ajena": 403,
+        "adaptador_sin_clave": 403
+      },
+      "resultado": "Aprobada"
+    },
+    {
+      "id": "LAB04",
+      "esperado": "Concurrencia: un asiento y estado consultable",
+      "observado": {
+        "codigos": [
+          200,
+          201
+        ],
+        "estado": 200,
+        "saldos_centavos": {
+          "CTA-A": 92500,
+          "CTA-B": 32500
+        },
+        "asientos": [
+          [
+            "LAB-TX-01",
+            "CTA-A",
+            "CTA-B",
+            7500
+          ]
+        ]
+      },
+      "resultado": "Aprobada"
+    },
+    {
+      "id": "LAB05",
+      "esperado": "Referencia en conflicto conserva asiento original",
+      "observado": {
+        "codigo": 409,
+        "asientos": 1
+      },
+      "resultado": "Aprobada"
+    },
+    {
+      "id": "LAB06",
+      "esperado": "Evento y alerta correlacionados, sin credenciales del ensayo",
+      "observado": {
+        "traza": "48488e29a8a346bcbcadae06db8c5b09",
+        "registros_correlacionados": 2
+      },
+      "resultado": "Aprobada"
+    },
+    {
+      "id": "LAB07",
+      "esperado": "Servicio core detenido: 503 sin asiento nuevo",
+      "observado": {
+        "codigo": 503,
+        "asientos": 1
+      },
+      "resultado": "Aprobada"
+    },
+    {
+      "id": "LAB08",
+      "esperado": "Restauración de copia disponible, conciliación y estado",
+      "observado": {
+        "estado": 200,
+        "consulta": 200,
+        "orden_durante_caida": 404,
+        "tiempo_ensayo_ms": 4051.02,
+        "asientos_perdidos_en_fixture": 0,
+        "saldos": {
+          "CTA-A": 92500,
+          "CTA-B": 32500
+        }
+      },
+      "resultado": "Aprobada"
+    }
+  ],
+  "eventos": [
+    {
+      "traza": "6d974d6fa63b4834a905fc834b02aa98",
+      "hora_utc": "2026-11-24T19:05:54.227970+00:00",
+      "canal": "web",
+      "actividad": "/saldo",
+      "usuario": "cliente-a",
+      "dispositivo_sintetico": "equipo-web",
+      "tls_adaptador": "TLSv1.3",
+      "codigo": 200,
+      "resultado": "autorizado"
+    },
+    {
+      "traza": "4a42b435a345419184ad0b847d32e21a",
+      "hora_utc": "2026-11-24T19:05:54.755325+00:00",
+      "canal": "movil",
+      "actividad": "/saldo",
+      "usuario": "cliente-a",
+      "dispositivo_sintetico": "equipo-movil",
+      "tls_adaptador": "TLSv1.3",
+      "codigo": 200,
+      "resultado": "autorizado"
+    },
+    {
+      "traza": "48488e29a8a346bcbcadae06db8c5b09",
+      "hora_utc": "2026-11-24T19:05:55.315924+00:00",
+      "canal": "web",
+      "actividad": "/transferencia",
+      "usuario": "cliente-a",
+      "dispositivo_sintetico": "equipo-web",
+      "monto_centavos": 7500,
+      "destino": "CTA-B",
+      "codigo": 403,
+      "resultado": "verificacion_adicional"
+    },
+    {
+      "traza": "48488e29a8a346bcbcadae06db8c5b09",
+      "hora_utc": "2026-11-24T19:05:55.316064+00:00",
+      "alerta": "operacion_fuera_de_perfil_sintetico"
+    },
+    {
+      "traza": "dcb6a01c7973478fb805df61863b872c",
+      "hora_utc": "2026-11-24T19:05:55.560339+00:00",
+      "canal": "web",
+      "actividad": "/saldo",
+      "usuario": "sin_autenticar",
+      "dispositivo_sintetico": "equipo-web",
+      "codigo": 401,
+      "resultado": "sesion_denegada"
+    },
+    {
+      "traza": "8528e98e6f414d37b2a94c645b276e18",
+      "hora_utc": "2026-11-24T19:05:55.795010+00:00",
+      "canal": "web",
+      "actividad": "/saldo",
+      "usuario": "cliente-a",
+      "dispositivo_sintetico": "equipo-web",
+      "tls_adaptador": "TLSv1.3",
+      "codigo": 403,
+      "resultado": "cuenta_denegada"
+    },
+    {
+      "traza": "412d231bdc714cb6a5f747cead9a5547",
+      "hora_utc": "2026-11-24T19:05:56.337162+00:00",
+      "canal": "web",
+      "actividad": "/transferencia",
+      "usuario": "cliente-a",
+      "dispositivo_sintetico": "equipo-web",
+      "monto_centavos": 7500,
+      "destino": "CTA-A",
+      "tls_adaptador": "TLSv1.3",
+      "codigo": 403,
+      "resultado": "cuenta_denegada"
+    },
+    {
+      "traza": "955dea616881482cb4c6dfec5ee42d1f",
+      "hora_utc": "2026-11-24T19:05:56.866950+00:00",
+      "canal": "web",
+      "actividad": "/transferencia",
+      "usuario": "cliente-a",
+      "dispositivo_sintetico": "equipo-web",
+      "monto_centavos": 7500,
+      "destino": "CTA-B",
+      "tls_adaptador": "TLSv1.3",
+      "codigo": 201,
+      "resultado": "confirmada"
+    },
+    {
+      "traza": "1102bce3706f4c6b88426cf26458ea66",
+      "hora_utc": "2026-11-24T19:05:56.956042+00:00",
+      "canal": "web",
+      "actividad": "/transferencia",
+      "usuario": "cliente-a",
+      "dispositivo_sintetico": "equipo-web",
+      "monto_centavos": 7500,
+      "destino": "CTA-B",
+      "tls_adaptador": "TLSv1.3",
+      "codigo": 200,
+      "resultado": "confirmada"
+    },
+    {
+      "traza": "c50cf1b45d4e4907981a91c6c443cd72",
+      "hora_utc": "2026-11-24T19:05:57.489232+00:00",
+      "canal": "web",
+      "actividad": "/estado",
+      "usuario": "cliente-a",
+      "dispositivo_sintetico": "equipo-web",
+      "tls_adaptador": "TLSv1.3",
+      "codigo": 200,
+      "resultado": "confirmada"
+    },
+    {
+      "traza": "7d256fa6d50c4dc0a62cb754df7ada8b",
+      "hora_utc": "2026-11-24T19:05:58.056494+00:00",
+      "canal": "web",
+      "actividad": "/transferencia",
+      "usuario": "cliente-a",
+      "dispositivo_sintetico": "equipo-web",
+      "monto_centavos": 7600,
+      "destino": "CTA-B",
+      "tls_adaptador": "TLSv1.3",
+      "codigo": 409,
+      "resultado": "referencia_en_conflicto"
+    },
+    {
+      "traza": "ea695f9cf7334a458b24b9ea6f63b291",
+      "hora_utc": "2026-11-24T19:05:58.896418+00:00",
+      "canal": "web",
+      "actividad": "/transferencia",
+      "usuario": "cliente-a",
+      "dispositivo_sintetico": "equipo-web",
+      "monto_centavos": 7500,
+      "destino": "CTA-B",
+      "tls_adaptador": null,
+      "codigo": 503,
+      "resultado": "adaptador_no_disponible"
+    },
+    {
+      "traza": "4a7ed462c4ce409db68ac5f3efa951bd",
+      "hora_utc": "2026-11-24T19:06:01.309601+00:00",
+      "canal": "web",
+      "actividad": "/estado",
+      "usuario": "cliente-a",
+      "dispositivo_sintetico": "equipo-web",
+      "tls_adaptador": "TLSv1.3",
+      "codigo": 200,
+      "resultado": "confirmada"
+    },
+    {
+      "traza": "04d522eea9b14676862579cf18830e50",
+      "hora_utc": "2026-11-24T19:06:01.854172+00:00",
+      "canal": "web",
+      "actividad": "/saldo",
+      "usuario": "cliente-a",
+      "dispositivo_sintetico": "equipo-web",
+      "tls_adaptador": "TLSv1.3",
+      "codigo": 200,
+      "resultado": "autorizado"
+    },
+    {
+      "traza": "c8d6d5db215b44629812d01dae6727e5",
+      "hora_utc": "2026-11-24T19:06:02.404518+00:00",
+      "canal": "web",
+      "actividad": "/estado",
+      "usuario": "cliente-a",
+      "dispositivo_sintetico": "equipo-web",
+      "tls_adaptador": "TLSv1.3",
+      "codigo": 404,
+      "resultado": "sin_confirmacion"
+    }
+  ],
+  "error": null
+}
