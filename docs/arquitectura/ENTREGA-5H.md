@@ -1,0 +1,12 @@
+# Entrega prioritaria — 24/11/2026
+Proyecto GCP sgsi-banco-meridian-515717. Mantener P01/P02 y recursos independientes del proyecto TCP/IP. Priorizar pruebas del Anexo C existentes; no desarrollar core bancario completo ni implementar servicios sin relación con alcance.
+## Etapa mínima
+Una VM meridian-app privada en Compute Engine, VPC/subredes, IAP/OS Login, Flow Logs; core/adaptador SQLite en equipo local, mediante reenvío SSH bidireccional por IAP y TLS con certificados de prueba separados. No es VPN IPsec ni alta disponibilidad. Cloud Shell no es infraestructura local; si ambos extremos están en cloud, declarar simulación. No abrir API al público. Identidades reforzadas sintéticas y canal web/móvil representado por solicitudes; no se acredita MFA real ni una interfaz de usuario.
+## Evidencia
+Variante entregada aparte como Meridian-laboratorio-distribuido.zip, con código original intacto (SHA-256 134bdfbcd2f9e78a07d14a112731fff500242b5dd0987f93cd261eed2b8bbc64), adaptador de pruebas, instrucciones. Validación de dos procesos locales: 8/8, LAB07 detiene servicio de core, LAB08 restaura copia y reconcilia. No es ejecución en GCP. Incorporar fuente a Git tras revisión; no publicar meridian-runtime ni configuraciones generadas.
+Recopilar: plan aplicado sin datos privados; VM sin IP pública; VPC/firewall/IAP y Flow Logs; gateway ejecutándose en GCP y core en equipo local; JSON de LAB01–LAB08 y versiones/huellas; resultados observados y limitaciones.
+## Seguridad y pendientes
+VPC Flow Logs configurado (verificar plan y CI). Checkov CKV_GCP_38: discos con cifrado predeterminado Google; CMEK no implementado en etapa mínima, pendiente de evaluación y tratamiento. No suprimir hallazgo para declarar aprobación. NAT y demás VM inicialmente desactivados. No hay despliegue automático ni acceso GCP desde GitHub Actions.
+Pendientes: MFA real, WAF, VPN IPsec, SIEM/EDR/XDR, MDM/DLP, interfaz real, pruebas BIA, conmutación y evaluación residual. Revisar qué es factible en la ventana restante y documentar brechas honestamente.
+## Documentación
+Actualizar Word v.3/Excel una vez confirmada evidencia real. Conservar ZIP y evidencia originales; separar nueva ejecución. No cambiar P01/P02, BIA ni puntuaciones por el mero cambio de proveedor. Mantener arquitectura objetivo diferenciada de escenario mínimo y controles pendientes. No publicar repositorio sin auditoría y autorización.
