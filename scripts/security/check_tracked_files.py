@@ -15,7 +15,7 @@ def git(*args):
 def forbidden(path):
     p = PurePosixPath(path.lower())
     n = p.name
-    if any(part in {".terraform", ".ssh", "secrets", "backups"} for part in p.parts):
+    if any(part in {".terraform", ".ssh", "secrets", "backups", "meridian-runtime", "lab-runtime"} for part in p.parts):
         return True
     if any(p.parts[i:i + 2] in {("evidencias", "raw"), ("evidencias", "privadas"), (".config", "gcloud")} for i in range(len(p.parts) - 1)):
         return True
