@@ -24,3 +24,13 @@ variable "enable_nat" {
   default     = false
   description = "Activa NAT de salida; genera cargos."
 }
+
+variable "enabled_nodes" {
+  type        = set(string)
+  default     = ["app"]
+  description = "Nodos que se habilitan cuando enable_vms es true."
+  validation {
+    condition = length(setsubtract(var.enabled_nodes, toset(["app", "iam", "siem"]))) == 0
+    error_message = "Use solo app, iam o siem."
+  }
+}
