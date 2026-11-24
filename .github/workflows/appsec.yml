@@ -1,0 +1,62 @@
+name: AppSec laboratorio P01 P02
+on:
+  push:
+    branches: [entrega-gcp-5h]
+    paths:
+      - 'laboratorio/**'
+      - '.github/workflows/appsec.yml'
+  pull_request:
+    paths:
+      - 'laboratorio/**'
+      - '.github/workflows/appsec.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  sast:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Instalar Semgrep CE
+        run: |
+          python3 -m venv "$RUNNER_TEMP/semgrep-env"
+          "$RUNNER_TEMP/semgrep-env/bin/pip" install 'semgrep==1.186.0'
+      - name: Analizar codigo Python
+        shell: bash
+        run: |
+          set -euo pipefail
+          semgrep="$RUNNER_TEMP/semgrep-env/bin/semgrep"
+          "$semgrep" --version
+          "$semgrep" scan --config p/python --config p/security-audit --metrics=off --disable-version-check --strict --error --json --output "$RUNNER_TEMP/semgrep.json" laboratorio/ || rc=$?
+          python3 - "$RUNNER_TEMP/semgrep.json" "${rc:-0}" <<'PY'
+          import json, sys
+          with open(sys.argv[1], encoding="utf-8") as f:
+              data = json.load(f)
+          print("Archivos:", len(data.get("paths", {}).get("scanned", [])))
+          print("Hallazgos:", len(data.get("results", [])))
+          print("Errores:", len(data.get("errors", [])))
+          for item in data.get("results", []):
+              print(item["check_id"], item["path"], item["start"]["line"], item.get("extra", {}).get("severity"))
+          if not data.get("paths", {}).get("scanned") or data.get("errors") or data.get("results"):
+              sys.exit(1)
+          sys.exit(int(sys.argv[2]))
+          PY
+  sca:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: OSV Scanner - inventario upstream observado
+        shell: bash
+        env:
+          SCANNER: ghcr.io/google/osv-scanner:v2.7.1@sha256:a70ffffc2bfd33482953e5d6b64c6fcdb30239717a07b0f0d3ab2859ce3e4cde
+        run: |
+          set -euo pipefail
+          docker pull "$SCANNER"
+          docker run --rm "$SCANNER" --version
+          docker run --rm -v "$PWD/laboratorio:/src:ro" "$SCANNER" scan source --lockfile 'requirements.txt:/src/requirements-gcp-observado.txt'
