@@ -1,5 +1,5 @@
 # Fundación GCP — Banco Meridian
-Borrador inicial de IaC, no ejecutado contra GCP. Terraform CLI >=1.6; proveedor hashicorp/google 6.x (rango explícito, revisar compatibilidad y lockfile al inicializar). Requiere proyecto nuevo con facturación vinculada y permisos de despliegue. No usar ID del proyecto TCP/IP.
+Borrador inicial de IaC, no ejecutado contra GCP. Terraform CLI >=1.6; proveedor hashicorp/google 8.6.x (edición corroborada en https://registry.terraform.io/providers/hashicorp/google/8.6.0/docs el 24/11/2026; verificar compatibilidad y lockfile al inicializar). Requiere proyecto nuevo con facturación vinculada y permisos de despliegue. No usar ID del proyecto TCP/IP.
 ## Preparación por el usuario
 1. Crear el proyecto independiente en consola, vincular facturación y establecer presupuesto/alertas (no son tope de gasto).
 2. Confirmar ID real, región, CIDR local VMware y ausencia de solapamientos. No compartir contraseñas, tokens ni JSON de cuentas de servicio.
@@ -8,6 +8,7 @@ Borrador inicial de IaC, no ejecutado contra GCP. Terraform CLI >=1.6; proveedor
 5. Copiar terraform.tfvars.example a terraform.tfvars; ingresar ID real. El ID debe comenzar con sgsi-banco-meridian, o adaptar explícitamente validación si se eligió otro.
 ## Plan
 terraform init
+terraform fmt
 terraform fmt -check
 terraform validate
 terraform plan -out=meridian.tfplan
